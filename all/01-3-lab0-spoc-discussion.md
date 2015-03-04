@@ -96,7 +96,7 @@ intr=8;
 SETGATE(intr, 0,1,2,3);
 ```
 请问执行上述指令后， intr的值是多少？
-- 65538  
+- 运行程序计算，答案为65538。（[查看代码](https://github.com/december/os_data/blob/master/test.c)）  
 
 > 
 
