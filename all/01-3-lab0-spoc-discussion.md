@@ -52,7 +52,7 @@
 > 
 
 尝试用qemu+gdb（or ECLIPSE-CDT）调试lab1
--   
+- 依照视频中所演示的方法尝试进行了调试。 
 
 > 
 
@@ -71,7 +71,7 @@ struct gatedesc {
     unsigned gd_off_31_16 : 16;        // high bits of offset in segment
 };
 ```
-- [x]  
+- 表示数据所占的位数。  
 
 > 
 
@@ -96,7 +96,7 @@ intr=8;
 SETGATE(intr, 0,1,2,3);
 ```
 请问执行上述指令后， intr的值是多少？
-- [x]  
+- 65538  
 
 > 
 
