@@ -15,7 +15,41 @@
 ## 3.3 中断、异常和系统调用比较
  1. 举例说明Linux中有哪些中断，哪些异常？
  1. Linux的系统调用有哪些？大致的功能分类有哪些？  (w2l1)
-
+ 
+	Linux的系统调用数量大约为300多个，其主要分为以下几个大类，并且给出几个例子。
+	
+	1. 进程控制
+	
+		fork 创建一个新进程。 execve 运行可执行文件。
+		
+	2. 文件系统控制
+	
+		其中包含文件读写操作，文件系统操作。
+		
+	3. 系统控制
+	
+		icoct I/O总控制函数
+		
+	4. 内存管理等
+	
+		mlock 内存页面加锁。
+		
+	5. 网络管理
+	
+		getdomainname 取域名
+		
+	6. socket控制
+		
+		socket 建立socket。
+	
+	7. 用户管理
+	
+		getuid 获取用户标识号
+		
+	8. 进程间通信
+	
+		其中包括信号，消息，管道，信号量，共享内存。
+	
 ```
   + 采分点：说明了Linux的大致数量（上百个），说明了Linux系统调用的主要分类（文件操作，进程管理，内存管理等）
   - 答案没有涉及上述两个要点；（0分）
@@ -25,7 +59,29 @@
  ```
  
  1. 以ucore lab8的answer为例，uCore的系统调用有哪些？大致的功能分类有哪些？(w2l1)
- 
+
+	在ucore lab8的answer中syscall一共有22个系统调用。按功能分类可得。
+	
+	1. 进程管理
+		
+		其中具体包含的指令为，sys_exit, sys_fork, sys_wait, sys_exec, sys_yield, sys_kill, sys_getpid, sys_sleep.
+		
+		这些指令实现了对进程的管理。
+	
+	2. 文件系统控制
+	
+		其中具体包含的指令为，sys_pgdir, sys_gettime, sys_open, sys_close, sys_read, sys_write, sys_seek, sys_fstat, sys_dup, sys_getdirentry.
+		
+		这些指令实现了对文件系统的控制。
+	
+	3. 内存管理
+	
+		其中具体包含的指令为，sys_lab6_set_priority, sys_fsync, sys_getcwd, sys_putc.
+		
+		这些指令实现了对内存的控制。
+	
+	用户通过调用上述的系统调用函数，可以获得内核提供的相应功能，每个功能的具体实现分散在内核的不同部分。
+		
  ```
   + 采分点：说明了ucore的大致数量（二十几个），说明了ucore系统调用的主要分类（文件操作，进程管理，内存管理等）
   - 答案没有涉及上述两个要点；（0分）
