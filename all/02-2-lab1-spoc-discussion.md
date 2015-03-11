@@ -18,7 +18,43 @@ NOTICE
   - 除第二点外，进一步描述了对8259中断控制器的初始过程（2分）
   - 除上述两点外，进一步描述了对8253时钟外设的初始化，或描述了对EFLAG操作使能中断（3分）
  ```
-- [x]  
+- 阅读init.c中的代码，以下一段即为主要准备工作：
+
+```
+kern_init(void){
+    extern char edata[], end[];
+    memset(edata, 0, end - edata);
+
+    cons_init();                // init the console
+
+    const char *message = "(THU.CST) os is loading ...";
+    cprintf("%s\n\n", message);
+
+    print_kerninfo();
+
+    grade_backtrace();
+
+    pmm_init();                 // init physical memory management
+
+    pic_init();                 // init interrupt controller
+    idt_init();                 // init interrupt descriptor table
+
+    clock_init();               // init clock interrupt
+    intr_enable();              // enable irq interrupt
+
+    //LAB1: CAHLLENGE 1 If you try to do it, uncomment lab1_switch_test()
+    // user/kernel mode switch test
+    lab1_switch_test();
+
+    /* do nothing */
+    while (1);
+}）
+ ```
+- 注意到，准备工作主要包括初始化内存管理（pmm_init()）、8259中断控制器（pic_init()）、中断描述符表（idt_init()）、8253时钟外设（clock_init()）。
+- 对于IDT（中断描述符表），阅读idt_init()函数，首先引用一个在vectors.S中定义的_vector，里面存放所有中断描述符对应的跳转地址。中断描述符表的每一项用gatedesc结构表示，用SETGATE函数将各个参数填入结构中再作为一项加入到IDT中（for循环中为内核态，for循环外为用户态），最后用lidt命令通知系统已经就绪。
+- 对于8259中断控制器，阅读pic_init()函数，主要通过多个内联汇编outb命令设定各种中断源的优先级，并能够利用mask对中断源进行屏蔽。
+- 对于8253时钟外设，阅读clock_init()函数，同样通过内联汇编outb命令初始化8253芯片，之后初始化时间计数器tick，打印相关信息后打开时钟中断请求使能。
+
 
 >  
 
@@ -30,7 +66,60 @@ lab1中完成了对哪些外设的访问？ (w2l2)
   - 除第二点外，进一步说明了串口（2分）
   - 除上述两点外，进一步说明了并口，或说明了CGA，或说明了键盘（3分）
  ```
-- [x]  
+- 完成了对时钟、串口、并口、CGA、键盘等外设的访问。 
+- 以时钟、串口、键盘为例，阅读lab1中的trap.c和trap.h代码，注意到以下部分：
+ ```
+ //from trap.h
+#define IRQ_TIMER                0
+#define IRQ_KBD                    1
+#define IRQ_COM1                4
+
+//from trap.c
+trap_dispatch(struct trapframe *tf) {
+    char c;
+
+    switch (tf->tf_trapno) {
+    case IRQ_OFFSET + IRQ_TIMER:
+        /* LAB1 YOUR CODE : STEP 3 */
+        /* handle the timer interrupt */
+        /* (1) After a timer interrupt, you should record this event using a global variable (increase it), such as ticks in kern/driver/clock.c
+         * (2) Every TICK_NUM cycle, you can print some info using a funciton, such as print_ticks().
+         * (3) Too Simple? Yes, I think so!
+         */
+        ticks ++;
+        if (ticks % TICK_NUM == 0) {
+            print_ticks();
+        }
+        break;
+        break;
+    case IRQ_OFFSET + IRQ_COM1:
+        c = cons_getc();
+        cprintf("serial [%03d] %c\n", c, c);
+        break;
+    case IRQ_OFFSET + IRQ_KBD:
+        c = cons_getc();
+        cprintf("kbd [%03d] %c\n", c, c);
+        break;
+    //LAB1 CHALLENGE 1 : YOUR CODE you should modify below codes.
+    case T_SWITCH_TOU:
+    case T_SWITCH_TOK:
+        panic("T_SWITCH_** ??\n");
+        break;
+    case IRQ_OFFSET + IRQ_IDE1:
+    case IRQ_OFFSET + IRQ_IDE2:
+        /* do nothing */
+        break;
+    default:
+        // in kernel, it must be a mistake
+        if ((tf->tf_cs & 3) == 0) {
+            print_trapframe(tf);
+            panic("unexpected trap in kernel.\n");
+        }
+    }
+}
+ ```
+- 由以上代码可见，通过中断访问外设，IRQ_TIMER、IRO_KBD、IRQ_COM1分别代表时钟、键盘、串口的编号，通过switch来访问具体的外设。对于时钟，每次收到信号时tick加一，到100时触发中断（TICK_NUM = 100）；对于串口和键盘，都是调用cons_getc()函数，该函数是从类似总线的数据通路上读取数据，键盘或串口将数据输入到该通路上，从而触发中断并输出信息。
+- 对代码进行make qemu操作，在qemu中可以看到tick＝100时屏幕上会打印出时钟中断的信息，按下键盘上按键时屏幕也会打印键盘中断的信息。
 
 >  
 
@@ -42,7 +131,7 @@ lab1中的cprintf函数最终通过哪些外设完成了对字符串的输出？
   - 除第二点外，进一步说明了并口（2分）
   - 除上述两点外，进一步说明了CGA（3分）
  ```
-- [x]  
+- 通过串口、并口、CGA完成了对字符串的输出。  
 
 >  
 
@@ -64,7 +153,8 @@ lab1中printfmt函数用到了可变参，请参考写一个小的linux应用程
 
 
 如何能获取一个系统调用的调用次数信息？如何可以获取所有系统调用的调用次数信息？请简要说明可能的思路。(spoc)
-- [x]  
+- 许多操作系统都支持一些命令或调试工具，能够跟踪一个进程的系统调用或信号产生的情况，有的可以跟踪进程调用库函数的情况。例如上次作业中用到的linux下的strace命令，就能跟踪进程执行时的系统调用和所接收的信号，能够获取该进程所有系统调用的调用次数信息，又能得到其中每个系统调用的返回值、次数、执行消耗的时间等参数。类似的还有很多unix系统上的truss命令、Itrace命令等。
+- 就实验用的ucore系统来说，由于我们有操作系统的代码，可以在内核代码上进行修改，以获取一个系统调用的调用次数和所有系统调用的调用次数。例如在syscall.c中添加代码，对每个系统调用维护一个计数器，统计其调用次数；并维护一个全局计数器，统计所有系统调用的调用次数；在调用系统调用时打印当前调用次数，或是在trap.c等文件中统一添加打印次数的函数等，都是可行的实现思路。
 
 > 
 
