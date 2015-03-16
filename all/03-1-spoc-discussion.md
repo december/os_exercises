@@ -43,9 +43,7 @@ NOTICE
 伙伴分配器的一个极简实现
 http://coolshell.cn/tag/buddy
 ```
-
-
-
+- 我的学号是2012011359，应当实现的是buddy system，采用二叉树实现，头文件在[这里]查看，(https://github.com/marcusgao94/os_data/blob/master/buddysystem.h)，源文件在[这里]查看(https://github.com/marcusgao94/os_data/blob/master/buddysystem.cpp)，测试用例在[这里]查看(https://github.com/marcusgao94/os_data/blob/master/test.cpp)。
 
 --- 
 
