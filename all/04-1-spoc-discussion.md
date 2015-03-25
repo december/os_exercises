@@ -35,6 +35,29 @@ time ./goodlocality
 ```
 可以看到其执行时间。
 
+首先按要求编译运行原程序，得以下结果：
+
+```
+10485760 count computing over!
+
+real	0m0.048s
+user	0m0.041s
+sys	0m0.005s
+```
+
+然后交换i和j，再次编译运行，得以下结果：
+
+```
+10485760 count computing over!
+
+real	0m0.211s
+user	0m0.196s
+sys	0m0.005s
+```
+
+可以看到，运行时间明显增加了，这是由于交换过后的程序的内存访问局部性要比原程序差，导致效率降低。
+
+
 ## 小组思考题目
 ----
 
@@ -117,6 +140,38 @@ Virtual Address 1e6f(0 001_11 10_011 0_1111):
   disk 16: 00 0a 15 1a 03 00 09 13 1c 0a 18 03 13 07 17 1c 
            0d 15 0a 1a 0c 12 1e 11 0e 02 1d 10 15 14 07 13
       --> To Disk Sector Address 0x2cf(0001011001111) --> Value: 1c
+```
+
+根据上次作业的程序修改得到计算程序，可在[这里](https://github.com/december/os_data/blob/master/calc_vm.py)查看。计算结果如下：
+
+```
+Virtual Address 6653:
+  pde index:0x19
+  pde contents:(valid 0, pfn 0x7f)
+  Fault (page directory entry not valid)
+
+Virtual Address 1c13:
+  pde index:0x7
+  pde contents:(valid 1, pfn 0x3d)
+  pte index:0x0  pte content:(valid 1, pfn 0x76)
+  Translate to Physical Address 0xed3 --> Value: 0x12
+
+Virtual Address 6890:
+  pde index:0x1a
+  pde contents:(valid 0, pfn 0x7f)
+  Fault (page directory entry not valid)
+
+Virtual Address 0af6:
+  pde index:0x2
+  pde contents:(valid 1, pfn 0x21)
+  pte index:0x17  pte content:(valid 0, pfn 0x7f)
+  To Disk Sector Address 0xff6 --> Value: 0x3
+
+Virtual Address 1e6f:
+  pde index:0x7
+  pde contents:(valid 1, pfn 0x3d)
+  pte index:0x13  pte content:(valid 0, pfn 0x16)
+  To Disk Sector Address 0x2cf --> Value: 0x1c
 ```
 
 ## 扩展思考题
