@@ -44,9 +44,15 @@
 
 https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-boot-with-grub2-in-udisk.md
 
+
+
 > 注意，grub_kernel的源码在ucore_lab的lab1_X的git branch上，位于 `ucore_lab/labcodes_answer/lab1_result`
 
 (报告可课后完成)请理解grub multiboot spec的含义，并分析ucore_lab是如何实现符合grub multiboot spec的，并形成spoc练习报告。
+
+对grub multiboot spec的含义理解可见[这里](http://www.cnblogs.com/chio/archive/2008/01/01/1022430.html)。
+
+对于ucore_lab，当bootloader转到保护模式之后，即可符合以上规范中的要求。
 
 ### (2)(spoc) 理解用户进程的生命周期。
 
@@ -70,3 +76,4 @@ https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-boot-with
 
 请完成如下练习，完成代码填写，并形成spoc练习报告
 
+填写后的代码在[这里](https://github.com/december/ucore_lab/tree/master/labcodes/lab5_spoc)查看。
