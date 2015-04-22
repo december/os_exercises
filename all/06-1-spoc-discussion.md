@@ -176,6 +176,8 @@ Final statistics:
 
 ```
 
+代码在[这里](https://github.com/december/os_data/blob/master/scheduler.py)查看。
+
 (２)扩展练习1:理解并实现MLFQ调度算法　可基于python, ruby, C, C++，LISP等）模拟实现，并给出测试，在试验报告写出设计思路和测试结果分析。
 
 (3)扩展练习2:理解并实现stride调度算法　可基于python, ruby, C, C++，LISP等）模拟实现，并给出测试，在试验报告写出设计思路和测试结果分析。
