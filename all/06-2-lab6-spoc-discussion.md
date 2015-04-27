@@ -41,5 +41,5 @@
 
 ### 练习用的[lab6 spoc exercise project source code](https://github.com/chyyuu/ucore_lab/tree/master/labcodes_answer/lab6_result)
 
-
+修改后的代码在[这里](https://github.com/december/os_data/tree/master/lab6_result)查看，运行结果与输出分别为[exit](https://github.com/december/os_data/blob/master/exit_out)和[priority](https://github.com/december/os_data/blob/master/priority_out)。
 
