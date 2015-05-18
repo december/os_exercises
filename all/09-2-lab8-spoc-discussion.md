@@ -48,6 +48,38 @@
 1. (spoc) 理解文件访问的执行过程，即在ucore运行过程中通过`cprintf`函数来完整地展现出来读一个文件在ucore中的整个执行过程，(越全面细致越好)
 完成代码填写，并形成spoc练习报告，需写练习报告和简单编码，完成后放到git server 对应的git repo中
 
+读文件过程中的调用关系与顺序如下：
+
+```
+sysread(int, void*, size_t);
+syscall(int, int, void*, size_t);
+trap(struct trapframe*);
+trap_dispatch(struct trapframe*);
+syscall();
+sys_read(uint32_t[]);
+从磁盘读取：
+sysfile_read(int, void*, size_t);
+file_read(int, void*, size_t, size)t);
+vop_read(struct inode*, struct iobuf*);
+sfs_read(struct inode*, struct iobuf*);
+sfs_io(struct inode*, struct iobuf*, bool);
+sfs_io_nolock(struct sfs_fs*, struct sfs_inode*, void*, off_t, size_t, bool);
+sfs_rwblock(struct sfs_fs*, void*, uint32_t, uint32_t, bool);
+sfs_rwblock_nolock(struct sfs_fs*, void*, uint32_t, bool, bool);
+disk0_io(struct device*, struct iobuf*, bool);
+disk0_read_blks_nolock(uint32_t, uint32_t);
+从IO设备读取：
+sfs_read(struct inode*, struct iobuf*);
+sysfile_read(int, void*, size_t);
+file_read(int, void*, size_t, size)t);
+vop_read(struct inode*, struct iobuf*);
+stdin_io(struct device *dev, struct iobuf *iob, bool write)
+dev_stdin_read(char *buf, size_t len);
+
+```
+
+代码在[这里](https://github.com/december/os_data/tree/master/lab8_result)查看。
+
 2. （spoc） 在下面的实验代码的基础上，实现基于文件系统的pipe IPC机制
 
 ### 练习用的[lab8 spoc exercise project source code](https://github.com/chyyuu/ucore_lab/tree/master/labcodes_answer/lab8_result)
