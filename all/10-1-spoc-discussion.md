@@ -39,5 +39,82 @@
 
 ## 小组思考题
  - (spoc)完成磁盘访问与磁盘寻道算法的作业，具体帮助和要求信息请看[disksim指导信息](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab8/disksim-homework.md)和[disksim参考代码](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab8/disksim-homework.py)
+ 
+## 问题 1：请执行 FIFO磁盘调度策略
 
+```
+./disksim.py  采用FIFO -a 0
+./disksim.py   -a 6
+./disksim.py   -a 30
+./disksim.py   -a 7,30,8
+./disksim.py   -a 10,11,12,13，24,1
+```
+请回答每个磁盘请求序列的IO访问时间
 
+结果如下，其中Seek为寻道时间，Rotate为旋转时间，Transfer为传输时间，Total为总时间。
+
+```
+./disksim.py  采用FIFO -a 0
+Block:   0  Seek:  0  Rotate:165  Transfer: 30  Total: 195
+
+./disksim.py   -a 6
+Block:   6  Seek:  0  Rotate:345  Transfer: 30  Total: 375
+
+./disksim.py   -a 30
+Block:  30  Seek: 80  Rotate:265  Transfer: 30  Total: 375
+
+./disksim.py   -a 7,30,8
+Block:   7  Seek:  0  Rotate: 15  Transfer: 30  Total:  45
+Block:  30  Seek: 80  Rotate:220  Transfer: 30  Total: 330
+Block:   8  Seek: 80  Rotate:310  Transfer: 30  Total: 420
+TOTALS      Seek:160  Rotate:545  Transfer: 90  Total: 795
+
+./disksim.py   -a 10,11,12,13，24,1
+Block:  10  Seek:  0  Rotate:105  Transfer: 30  Total: 135
+Block:  11  Seek:  0  Rotate:  0  Transfer: 30  Total:  30
+Block:  12  Seek: 40  Rotate:320  Transfer: 30  Total: 390
+Block:  13  Seek:  0  Rotate:  0  Transfer: 30  Total:  30
+Block:  24  Seek: 40  Rotate:260  Transfer: 30  Total: 330
+Block:   1  Seek: 80  Rotate:280  Transfer: 30  Total: 390
+TOTALS      Seek:160  Rotate:965  Transfer:180  Total:1305
+```
+
+## 问题 2：请执行 SSTF磁盘调度策略
+
+```
+./disksim.py   -a 10,11,12,13，24,1
+```
+请回答每个磁盘请求序列的IO访问时间
+
+结果如下，其中Seek为寻道时间，Rotate为旋转时间，Transfer为传输时间，Total为总时间。
+
+```
+./disksim.py   -a 10,11,12,13，24,1
+Block:  10  Seek:  0  Rotate:105  Transfer: 30  Total: 135
+Block:  11  Seek:  0  Rotate:  0  Transfer: 30  Total:  30
+Block:   1  Seek:  0  Rotate: 30  Transfer: 30  Total:  60
+Block:  12  Seek: 40  Rotate:260  Transfer: 30  Total: 330
+Block:  13  Seek:  0  Rotate:  0  Transfer: 30  Total:  30
+Block:  24  Seek: 40  Rotate:260  Transfer: 30  Total: 330
+TOTALS      Seek: 80  Rotate:655  Transfer:180  Total: 915
+```
+
+## 问题 3：请执行 SCAN, C-SCAN磁盘调度策略
+
+```
+./disksim.py   -a 10,11,12,13，24,1
+```
+请回答每个磁盘请求序列的IO访问时间
+ 
+结果如下，其中Seek为寻道时间，Rotate为旋转时间，Transfer为传输时间，Total为总时间。
+
+```
+./disksim.py   -a 10,11,12,13，24,1
+Block:  24  Seek: 80  Rotate: 85  Transfer: 30  Total: 195
+Block:  12  Seek: 40  Rotate:290  Transfer: 30  Total: 360
+Block:  13  Seek:  0  Rotate:  0  Transfer: 30  Total:  30
+Block:  10  Seek: 40  Rotate:200  Transfer: 30  Total: 270
+Block:  11  Seek:  0  Rotate:  0  Transfer: 30  Total:  30
+Block:   1  Seek:  0  Rotate: 30  Transfer: 30  Total:  60
+TOTALS      Seek:160  Rotate:605  Transfer:180  Total: 945
+```
